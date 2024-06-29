@@ -170,6 +170,10 @@ namespace GuiHelpers
     */
     static inline bool serializeFont (const juce::Font& font, juce::File& destinationFile, int maxNumChars = 127)
     {
+       #if JUCE_MAJOR_VERSION >= 8
+        juce::ignoreUnused (font, destinationFile, maxNumChars);
+        return false;
+       #else
         destinationFile.deleteFile();
         std::unique_ptr<juce::FileOutputStream> outFileStream (destinationFile.createOutputStream());
 
@@ -179,6 +183,7 @@ namespace GuiHelpers
         customTypeface.addGlyphsFromOtherTypeface (*font.getTypefacePtr(), 0, maxNumChars);
 
         return customTypeface.writeToStream (*outFileStream);
+       #endif
     }
 
     //==============================================================================
